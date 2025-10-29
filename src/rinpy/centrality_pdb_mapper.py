@@ -63,7 +63,9 @@ class CentralityPdbMapper:
         }
         """
 
-    def __init__(self, graph, pdb_name=None, destination_output_path=DEFAULT_OUTPUT_PATH, calculation_options=None):
+    def __init__(self, graph, pdb_name=None, destination_output_path=None, calculation_options=None):
+        if destination_output_path is None:
+            raise ValueError('You must provide an output path to proceed.')
         self.graph = graph
         self.pdb_name = pdb_name
         self.destination_output_path = destination_output_path

@@ -13,7 +13,7 @@ import networkx as nx
 import numpy as np
 
 from rinpy import utils
-from rinpy.constants import CENTRALITY_PDB_TEMPLATE, HIGH_PERCENTAGE_TEMPLATE, DEFAULT_OUTPUT_PATH, B_FACTOR, \
+from rinpy.constants import CENTRALITY_PDB_TEMPLATE, HIGH_PERCENTAGE_TEMPLATE, B_FACTOR, \
     RESIDUE_NUMBER, VALUE, CENTRALITY_CSV_TEMPLATE, RESIDUE_EDGES_FILE, RESIDUE_AVERAGE_COORDINATES_FILE, IS_CHECKED, \
     RESIDUE_NAME, CHAIN_ID, INSERTION, X_COORD, Z_COORD, Y_COORD, RESIDUE_INDEX, TOP_PERCENTAGE_TILE, SOURCE_RESIDUE, \
     TARGET_RESIDUE, X, Y, Z, GRAPH_NAME
@@ -76,8 +76,10 @@ class CentralityAnalyzer:
         actual_residue_number_map: dict, default: None
         """
 
-    def __init__(self, pdb_name, number_of_amino_acid, destination_output_path=DEFAULT_OUTPUT_PATH,
+    def __init__(self, pdb_name, number_of_amino_acid, destination_output_path=None,
                  calculation_options=None, actual_residue_number_map=None):
+        if destination_output_path is None:
+            raise ValueError('You must provide an output path to proceed.')
         self.pdb_name = pdb_name
         self.calculation_options = calculation_options
         self.number_of_amino_acid = number_of_amino_acid
