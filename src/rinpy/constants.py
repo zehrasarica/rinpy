@@ -56,8 +56,17 @@ BLANK_4: str = "blank_4"
 
 CA_ATOM_NAME: str = "CA"
 P_ATOM_NAME: str = "P"
-PDB_EXT: str = ".pdb"
 STAR_PRINT_COUNT: int = 30
+
+PDB_EXT: str = ".pdb"
+EXCEL_EXT: str = ".xlsx"
+CSV_EXT: str = ".csv"
+TXT_EXT: str = ".txt"
+HTML_EXT: str = ".html"
+PML_EXT: str = ".pml"
+PNG_EXT: str = ".png"
+
+DEFAULT_CUTOFF: float = 4.5
 
 CALCULATION_OPTION_DEFAULT_JSON_PATH: str = 'calculation_options.json'
 
