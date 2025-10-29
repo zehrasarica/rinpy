@@ -125,6 +125,6 @@ If you use this repository, please cite this study as follows:
   publisher={}
 }
 ```
-Contact
--------
+📬 Contact
+------------
 For questions, contact: zehraacar559@gmail.com, sarica16@itu.edu.tr
