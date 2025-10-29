@@ -106,6 +106,20 @@ License
 -------
 MIT License. See LICENSE file for details.
 
+## How to Cite
+
+If you use this repository, please cite this study as follows:
+
+```bibtex
+@article{,
+  title={},
+  author={},
+  journal={},
+  volume={},
+  year={},
+  publisher={}
+}
+```
 Contact
 -------
-For questions, contact: zehrasarica559@gmail.com, sarica16@itu.edu.tr
+For questions, contact: zehraacar559@gmail.com, sarica16@itu.edu.tr
