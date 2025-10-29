@@ -19,6 +19,10 @@ Features
 - Annotates nodes with chain, residue number, insertion code, and coordinates
 - Can be integrated with visualization tools such as PyMOL
 
+RINPY GUI
+------------
+You can download the standalone graphical user interface (GUI) version of **RINPY** from [here](YOUR_GOOGLE_DRIVE_LINK).
+
 Installation
 ------------
 
