@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["rinpy"]
+include-package-data = true
+
+[project]
+name = "rinpy"
+dynamic = ["version"]
+description = "Residue Interaction Network"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Zehra Sarica", email = "sarica16@itu.edu.tr" },
+    { name = "Zehra Sarica", email = "zehraacar559@gmail.com" }
+]
+requires-python = ">=3"
+dependencies = [
+    "setuptools",
+    "matplotlib==3.7.2",
+    "networkx==3.4.2",
+    "pandas==2.0.3",
+    "biopandas==0.5.1",
+    "plotly==6.0.1",
+    "scipy==1.11.1",
+    "scikit-learn==1.3.0",
+    "seaborn==0.13.2",
+    "openpyxl==3.1.2"
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering"
+]
+
+[project.urls]
+Homepage = "https://github.com/zehrasarica/rinpy"
+Documentation = "https://github.com/zehrasarica/rinpy"
+Source = "https://github.com/zehrasarica/rinpy"
+
+[tool.setuptools.dynamic]
+version = { attr = "rinpy.__version__" }
+
+[tool.setuptools.package-data]
+"rinpy" = [
+    "calculation_options.json",
+    "fonts/*.ttf"
+]
+
+[tool.setuptools.exclude-package-data]
+"rinpy" = [
+    "tests/*"
+]
+"*" = ["*.pyc", "*.pyo", "__pycache__/*"]
