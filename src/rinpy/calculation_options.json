@@ -1,0 +1,26 @@
+{
+  "remove_hydrogen": {
+    "is_checked": "True",
+    "value": 0
+  },
+  "betweenness": {
+    "is_checked": "True",
+    "value": 5
+  },
+  "closeness": {
+    "is_checked": "False",
+    "value": 10
+  },
+  "degree": {
+    "is_checked": "False",
+    "value": 10
+  },
+  "cluster_number": {
+    "is_checked": "None",
+    "value": 4
+  },
+  "cutoff": {
+    "is_checked": "True",
+    "value": 4.5
+  }
+}
