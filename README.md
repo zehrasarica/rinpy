@@ -3,7 +3,7 @@ RINPY – Residue Interaction Network for 3D Protein Structures
 
 Description
 -----------
-The rinpy is designed to predict allosteric sites in 3D protein structures
+The **RINPY** is designed to predict allosteric sites in 3D protein structures
 by converting them into the network. In this network, each node represents a
 residue, where a residue composed of multiple atoms is simplified to a single
 alpha carbon (CA) atom positioned at the average coordinates of all atoms in that residue.
