@@ -17,7 +17,7 @@ from rinpy.centrality_pdb_mapper import CentralityPdbMapper
 from rinpy.hinge_analyzer import HingeAnalyzer
 from rinpy.log_util import *
 from rinpy.quantile_analyzer import QuantileAnalyzer
-from rinpy.residue_graph_builder import ResidueGraphBuilder
+from rinpy.residue_network_builder import ResidueGraphBuilder
 from rinpy.trajectory import Trajectory
 from rinpy.utils import *
 
