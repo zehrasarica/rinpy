@@ -3,7 +3,7 @@ RINPY – Residue Interaction Network for 3D Protein Structures
 
 📖 Description
 ------------
-The **RINPY** is designed to predict allosteric sites in 3D protein structures
+The **RinPy** is designed to predict allosteric sites in 3D protein structures
 by converting them into the network. In this network, each node represents a
 residue, where a residue composed of multiple atoms is simplified to a single
 alpha carbon (CA) atom positioned at the average coordinates of all atoms in that residue.
@@ -21,11 +21,35 @@ interaction strength or affinity between residue atoms.
 
 🖥️ RINPY GUI
 --------------
-You can download the standalone graphical user interface (GUI) version of **RINPY** from [here](YOUR_GOOGLE_DRIVE_LINK).
+You can download the standalone graphical user interface (GUI) version of **RinPy** from [here](YOUR_GOOGLE_DRIVE_LINK).
 
 ⚙️ Installation
 -----------------
+### 📌 Prerequisites (Important)
 
+- **Python ≥ 3.10** is required.
+- RinPy depends on **NetworkX ≥ 3.4**, which requires Python 3.10 or newer.
+
+To ensure reliable management of the Python environment and scientific dependencies, we strongly recommend using **Miniconda** or **Anaconda**.
+
+- **Miniconda** (lightweight, recommended):  
+  https://docs.conda.io/en/latest/miniconda.html
+
+- **Anaconda** (full distribution):  
+  https://www.anaconda.com/products/distribution
+
+---
+
+### 🚀 Installation via PyPI (Recommended)
+
+RinPy is available on **PyPI** and can be installed directly using `pip`:
+
+```bash
+pip install rinpy
+```
+
+### 🔧 Installation from Source (Alternative)
+If you prefer to install RinPy from source, follow the steps below:
 1. Clone the repository:
    git clone https://github.com/zehrasarica/rinpy.git
 
@@ -33,15 +57,18 @@ You can download the standalone graphical user interface (GUI) version of **RINP
    cd rinpy
 
 3. Create a Python virtual environment (optional but recommended):
-   python -m venv rinpy
-   source activate rinpy
+   ```bash
+   conda create -n rinpy python=3.10
+   source activate rinpy or conda activate rinpy
 
 4. Install dependencies:
    pip install -r requirements.txt
 
 🚀 Usage
 ---------
-You can run RINPY using the `RINProcess` class in your Python scripts:
+RinPy can be used programmatically via the `RINProcess` API within your Python scripts.
+
+### Basic Example
 
 ```python
 from rinpy import RINProcess
@@ -67,10 +94,17 @@ calculation_options = {
 }
 
 # Initialize RINProcess, 
-# output_path must be given
-# For input, only give one of the following option: input_path, pdb_ids, or trajectory_file
-# The system will check first input_path, then pdb_ids, then trajectory_file. 
-# If you want to use pdb_ids, then pass input_file and trajectory_file as None
+#
+# output_path is mandatory.
+# For input, provide ONLY ONE of the following:
+#   - input_path
+#   - pdb_ids
+#   - trajectory_file
+# The system checks inputs in the following order:
+# input_path → pdb_ids → trajectory_file
+#
+# If using pdb_ids, set input_path and trajectory_file to None.
+
 rin = RINProcess(
     input_path="path/to/input/files",
     output_path="path/to/output",
@@ -116,9 +150,9 @@ MIT License. See LICENSE file for details.
 If you use this repository, please cite this study as follows:
 
 ```bibtex
-@article{,
-  title={},
-  author={},
+@article{rinpy,
+  title={RinPy, a Python Package for Residue Interaction Network Model to Analyze Protein Structures and Predict Ligand Binding Sites},
+  author={Sarica, Z.; Sungur, F. A.; Kurkcuoglu, O.},
   journal={},
   volume={},
   year={},
