@@ -13,10 +13,10 @@ import networkx as nx
 import numpy as np
 
 from rinpy import utils
-from rinpy.constants import CENTRALITY_PDB_TEMPLATE, HIGH_PERCENTAGE_TEMPLATE, B_FACTOR, \
-    RESIDUE_NUMBER, VALUE, CENTRALITY_CSV_TEMPLATE, RESIDUE_EDGES_FILE, RESIDUE_AVERAGE_COORDINATES_FILE, IS_CHECKED, \
+from rinpy.constants import CENTRALITY_PDB_TEMPLATE, HIGH_PERCENTAGE_TEMPLATE, RESIDUE_NUMBER, VALUE, \
+    CENTRALITY_CSV_TEMPLATE, RESIDUE_EDGES_FILE, RESIDUE_AVERAGE_COORDINATES_FILE, IS_CHECKED, \
     RESIDUE_NAME, CHAIN_ID, INSERTION, X_COORD, Z_COORD, Y_COORD, RESIDUE_INDEX, TOP_PERCENTAGE_TILE, SOURCE_RESIDUE, \
-    TARGET_RESIDUE, X, Y, Z, GRAPH_NAME
+    TARGET_RESIDUE, X, Y, Z, GRAPH_NAME, ATOM_NUMBER, CENTRALITY_SCORE
 from rinpy.graph_plotter import GraphPlotter
 from rinpy.log_util import log_details
 from rinpy.pymol_utils import PymolUtils
@@ -26,6 +26,7 @@ CENTRALITY_TYPE_KEY = 'centrality_type'
 QUANTILE_PERCENTAGE = "quantile_percentage"
 OUTFILE = "outfile"
 PDB_FILE = "pdb_file"
+CSV_FILE = "csv_file"
 
 
 class CentralityAnalyzer:
@@ -100,7 +101,7 @@ class CentralityAnalyzer:
                                       actual_residue_number_map=actual_residue_number_map)
 
     def _compute_top_percentage_quantile(self, centrality_type: CentralityType = CentralityType.DEG,
-                                         centrality_pdb_file: str = CENTRALITY_PDB_TEMPLATE.format(
+                                         centrality_csv_file: str = CENTRALITY_CSV_TEMPLATE.format(
                                              type=CentralityType.BET.display_name),
                                          high_percentage_file: str = HIGH_PERCENTAGE_TEMPLATE.format(
                                              type=CentralityType.BET.display_name),
@@ -116,7 +117,7 @@ class CentralityAnalyzer:
         centrality_type : CentralityType, default CentralityType.DEG
             The centrality type for centrality analysis.
             strength.
-        centrality_pdb_file : str, default centrality_betweennes.pdb
+        centrality_csv_file : str, default {PDB_ID}_centrality_betweennes.csv
             The PDB file contains the calculated centrality score (betweenness, closeness, and degree) in
             the b-factor column of the PDB.
         high_percentage_file : str, default betweennes_high_percentage_residues.csv
@@ -127,13 +128,25 @@ class CentralityAnalyzer:
 
         log_detail_name = f'{centrality_type.display_name} - {self.pdb_name}'
         logging.info(f'Given quantile percentage for {log_detail_name} : {quantile_percentage}')
+
+        columns = [ATOM_NUMBER, CENTRALITY_SCORE, RESIDUE_NAME, CHAIN_ID, RESIDUE_NUMBER, INSERTION]
+        dtypes = {ATOM_NUMBER: int, CENTRALITY_SCORE: float, RESIDUE_NAME: str, CHAIN_ID: str, RESIDUE_NUMBER: int,
+                  INSERTION: str}
+        sort_keys = [ATOM_NUMBER]
+
         centrality_pdb_file_path = os.path.join(os.path.join(str(self.destination_output_path), self.pdb_name),
-                                                centrality_pdb_file)
-        hub_df = utils.get_atom_pdb_df(ppdb=utils.convert_pdb_to_pandas_pdb(centrality_pdb_file_path))
-        b_factors = hub_df[B_FACTOR].to_numpy(dtype=np.float64)
-        threshold = np.percentile(b_factors, 100 - quantile_percentage)
+                                                centrality_csv_file)
+        centrality_score_df = utils.get_df(output_file_path=centrality_pdb_file_path,
+                                           columns=columns,
+                                           dtypes=dtypes,
+                                           sort_keys=sort_keys)
+
+        centrality_scores = centrality_score_df[CENTRALITY_SCORE].to_numpy(dtype=np.float64)
+
+        threshold = np.percentile(centrality_scores, 100 - quantile_percentage)
+
         logging.info(f'Calculated threshold value for {log_detail_name} : {threshold}')
-        out_df = hub_df[hub_df[B_FACTOR] >= threshold]
+        out_df = centrality_score_df[centrality_score_df[CENTRALITY_SCORE] >= threshold]
         out_path = os.path.join(self.destination_output_path, self.pdb_name, high_percentage_file)
         out_df.loc[:, INSERTION] = out_df[INSERTION].apply(lambda x: "''" if x == "" else x)
 
@@ -141,8 +154,8 @@ class CentralityAnalyzer:
                       sep=';',
                       index=False,
                       header=False,
-                      float_format="%.5f",
-                      columns=[RESIDUE_NAME, CHAIN_ID, RESIDUE_NUMBER, INSERTION, B_FACTOR])
+                      float_format="%.7f",
+                      columns=columns)
 
         self._create_pymol_data(out_df=out_df, centrality_type=centrality_type)
 
@@ -192,16 +205,19 @@ class CentralityAnalyzer:
         return {
             CentralityType.BET: {
                 PDB_FILE: self._get_pdb_file(centrality_type=CentralityType.BET),
+                CSV_FILE: self._get_csv_file(centrality_type=CentralityType.BET),
                 OUTFILE: self._get_outfile(centrality_type=CentralityType.BET),
                 QUANTILE_PERCENTAGE: self.calculation_options[CentralityType.BET.display_name][VALUE]
             },
             CentralityType.CLOS: {
                 PDB_FILE: self._get_pdb_file(centrality_type=CentralityType.CLOS),
+                CSV_FILE: self._get_csv_file(centrality_type=CentralityType.CLOS),
                 OUTFILE: self._get_outfile(centrality_type=CentralityType.CLOS),
                 QUANTILE_PERCENTAGE: self.calculation_options[CentralityType.CLOS.display_name][VALUE]
             },
             CentralityType.DEG: {
                 PDB_FILE: self._get_pdb_file(centrality_type=CentralityType.DEG),
+                CSV_FILE: self._get_csv_file(centrality_type=CentralityType.DEG),
                 OUTFILE: self._get_outfile(centrality_type=CentralityType.DEG),
                 QUANTILE_PERCENTAGE: self.calculation_options[CentralityType.DEG.display_name][VALUE]
             }
@@ -210,6 +226,10 @@ class CentralityAnalyzer:
     def _get_pdb_file(self, centrality_type: CentralityType) -> str:
         """returns formatted pdb file name based on centrality type"""
         return f'{self.pdb_name}_{CENTRALITY_PDB_TEMPLATE.format(type=centrality_type.display_name)}'
+
+    def _get_csv_file(self, centrality_type: CentralityType) -> str:
+        """returns formatted pdb file name based on centrality type"""
+        return f'{self.pdb_name}_{CENTRALITY_CSV_TEMPLATE.format(type=centrality_type.display_name)}'
 
     def _get_outfile(self, centrality_type: CentralityType) -> str:
         """returns formatted outfile name for high percentage based on centrality type"""
@@ -230,7 +250,7 @@ class CentralityAnalyzer:
         quantile_setting_dict = self._generate_quantile_setting_dict()
         self._compute_top_percentage_quantile(
             centrality_type=centrality_type,
-            centrality_pdb_file=quantile_setting_dict[centrality_type][PDB_FILE],
+            centrality_csv_file=quantile_setting_dict[centrality_type][CSV_FILE],
             high_percentage_file=quantile_setting_dict[centrality_type][OUTFILE],
             quantile_percentage=quantile_setting_dict[centrality_type][QUANTILE_PERCENTAGE])
 
@@ -265,21 +285,21 @@ class CentralityAnalyzer:
             if self._is_bet_checked():
                 self._compute_top_percentage_quantile(
                     centrality_type=CentralityType.BET,
-                    centrality_pdb_file=self._get_pdb_file(centrality_type=CentralityType.BET),
+                    centrality_csv_file=self._get_csv_file(centrality_type=CentralityType.BET),
                     high_percentage_file=self._get_outfile(centrality_type=CentralityType.BET),
                     quantile_percentage=self.calculation_options[CentralityType.BET.display_name][VALUE])
 
             if self._is_clos_checked():
                 self._compute_top_percentage_quantile(
                     centrality_type=CentralityType.CLOS,
-                    centrality_pdb_file=self._get_pdb_file(centrality_type=CentralityType.CLOS),
+                    centrality_csv_file=self._get_csv_file(centrality_type=CentralityType.CLOS),
                     high_percentage_file=self._get_outfile(centrality_type=CentralityType.CLOS),
                     quantile_percentage=self.calculation_options[CentralityType.CLOS.display_name][VALUE])
 
             if self._is_deg_checked():
                 self._compute_top_percentage_quantile(
                     centrality_type=CentralityType.DEG,
-                    centrality_pdb_file=self._get_pdb_file(centrality_type=CentralityType.DEG),
+                    centrality_csv_file=self._get_csv_file(centrality_type=CentralityType.DEG),
                     high_percentage_file=self._get_outfile(centrality_type=CentralityType.DEG),
                     quantile_percentage=self.calculation_options[CentralityType.DEG.display_name][VALUE])
 
