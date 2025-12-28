@@ -17,11 +17,12 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.offline as pyo
+from scipy.sparse.linalg import eigsh
 
 from rinpy import log_util
 from rinpy import utils
 from rinpy.constants import RESIDUE_NUMBER, MODE, CHAIN_ID, INSERTION, HIGH_PERCENTAGE_TEMPLATE, RESIDUE_NAME, \
-    CENTRALITY_SCORE, TXT_EXT, PDB_EXT, PML_EXT, CSV_EXT, HTML_EXT, PNG_EXT, X, Y, Z
+    CENTRALITY_SCORE, TXT_EXT, PDB_EXT, PML_EXT, CSV_EXT, HTML_EXT, PNG_EXT, X, Y, Z, RESIDUE_INDEX
 from rinpy.log_util import log_details
 from rinpy.pymol_utils import PymolUtils
 from rinpy.style_config import FONT_STYLES, FONT_FAMILY, EDGE_COLOR, COLOR_PALETTE
@@ -45,25 +46,34 @@ class HingeAnalyzer:
         utils.create_folder_not_exists(self.destination_output_path / self.pdb_name / HINGE_MODES_DIR)
 
     def compute_laplacian_modes(self, num_modes):
-        nodes = list(self.graph.nodes())
-        nodes.sort()
+        nodes = sorted(self.graph.nodes())
         laplacian = nx.laplacian_matrix(self.graph, nodelist=nodes).astype(float)
-        eigen_values, eigen_vectors = np.linalg.eigh(laplacian.toarray())
+
+        if not nx.is_connected(self.graph):
+            raise ValueError("Graph must be connected for spectral partitioning.")
+
+        k = num_modes + 1
+        eigen_values, eigen_vectors = eigsh(laplacian, k=k, which="SM")
+
+        idx = np.argsort(eigen_values)
+        eigen_values = eigen_values[idx]
+        eigen_vectors = eigen_vectors[:, idx]
+
         fiedler_vector = eigen_vectors[:, 1].real
-        filtered_data = eigen_vectors[:, 1:num_modes + 1]  # Fiedler +  3 more
+        spectral_modes = eigen_vectors[:, 1:k]  # Fiedler +  {num_modes-1} more num_modes included
 
         start = time.time()
         self.plot_fiedler(fiedler_vector=fiedler_vector)
-        log_util.log_elapsed_time1("plot_fiedler: ", start, time.time())
+        log_util.log_elapsed_time_detail("plot_fiedler: ", start, time.time())
 
-        return eigen_values, eigen_vectors, fiedler_vector, filtered_data
+        return eigen_values, eigen_vectors, fiedler_vector, spectral_modes
 
     @staticmethod
     def find_hinge_residues_with_sign(mode_data):
         hinge_residues = set()
         for i in range(1, len(mode_data)):
             if np.sign(mode_data[i]) != np.sign(mode_data[i - 1]):
-                hinge_residues.add(i + 1)
+                hinge_residues.add(i + 1)  # i+1 -> node index starts from 1 to n while mode_data has 0 index.
         return sorted(hinge_residues)
 
     def save_and_plot_mode_to_file(self, mode_data, mode_name, hinge_residues):
@@ -99,8 +109,8 @@ class HingeAnalyzer:
                                                                f'{self.pdb_name}_{HIGH_PERCENTAGE_TEMPLATE.format(type=CentralityType.BET.display_name)}'),
                                                   sep=";",
                                                   header=None,
-                                                  names=[RESIDUE_NAME, CHAIN_ID, RESIDUE_NUMBER, INSERTION,
-                                                         CENTRALITY_SCORE])
+                                                  names=[RESIDUE_INDEX, CENTRALITY_SCORE, RESIDUE_NAME, CHAIN_ID,
+                                                         RESIDUE_NUMBER, INSERTION])
         self.pymol_utils.export_pymol_script_hinge(
             full_path_to_pdb=out_filename,
             residues=hinge_residues,
@@ -108,8 +118,8 @@ class HingeAnalyzer:
             high_percentage_residues=list(
                 zip(high_percentage_residues_df[RESIDUE_NUMBER], high_percentage_residues_df[INSERTION])))
 
-    def _save_selected_eigen_vectors(self, eigen_vectors):
-        filtered_data_df = pd.DataFrame(eigen_vectors)
+    def _save_selected_eigen_vectors(self, spectral_modes):
+        filtered_data_df = pd.DataFrame(spectral_modes)
         num_columns = filtered_data_df.shape[1]
         headers = list(range(1, num_columns + 1))
         filtered_data_df.columns = headers
@@ -138,13 +148,13 @@ class HingeAnalyzer:
         if num_modes is None:
             num_modes = 4
 
-        eigen_values, eigen_vectors, fiedler_vector, filtered_data = self.compute_laplacian_modes(
+        eigen_values, eigen_vectors, fiedler_vector, spectral_modes = self.compute_laplacian_modes(
             num_modes=num_modes)
 
-        self._save_selected_eigen_vectors(eigen_vectors=filtered_data)
+        self._save_selected_eigen_vectors(spectral_modes=spectral_modes)
 
-        for i in range(filtered_data.shape[1]):
-            mode_data = filtered_data[:, i]
+        for i in range(spectral_modes.shape[1]):
+            mode_data = spectral_modes[:, i]
             hinge_residues = self.find_hinge_residues_with_sign(mode_data=mode_data)
             if hinge_residues and len(hinge_residues) > 0:
                 mode_data = np.where(mode_data < 0, -1, 1)
@@ -162,7 +172,7 @@ class HingeAnalyzer:
                 p = os.path.join(self.destination_output_path, self.pdb_name, HINGE_MODES_DIR,
                                  f"{self.pdb_name}_laplacian_mode_{(i + 1)}_graph_clusters_2d{PNG_EXT}")
                 self.plot_graph_clusters_2d(self.graph, cluster_labels, hinge_residues, full_path=p)
-                log_util.log_elapsed_time1("plot_graph_clusters_2d: ", start, time.time())
+                log_util.log_elapsed_time_detail("plot_graph_clusters_2d: ", start, time.time())
 
     @staticmethod
     def get_actual_hinge_residues_tuple(nodes, hinge_residues):
@@ -357,8 +367,8 @@ class HingeAnalyzer:
     def plot_graph_interactive_clusters_3d(graph, cluster_labels, hinge_residues, full_path):
         unique_clusters = sorted(set(cluster_labels.values()))
         color_map = {
-            cluster_id: COLOR_PALETTE[i % len(COLOR_PALETTE)]
-            for i, cluster_id in enumerate(unique_clusters)
+            cluster_id: COLOR_PALETTE[1] if cluster_id < 0 else COLOR_PALETTE[0]
+            for cluster_id in unique_clusters
         }
         node_traces = []
         for cluster_id in unique_clusters:
@@ -443,35 +453,6 @@ class HingeAnalyzer:
 
         pyo.plot(fig, filename=full_path, auto_open=False)
         logging.info(f"Interactive plot saved to: {full_path}")
-
-    def export_pymol_script(self, hinge_residues):
-        """ Generate a PyMOL script to visualize hinge residues.
-        Parameters:
-            - hinge_residues: List of hinge residue numbers (int)
-        """
-
-        full_path = self.get_full_save_path(filename="highlight_hinge_residues", extension="pml")
-        with open(full_path, 'w') as file:
-            file.write(f"load {self.pdb_name}.pdb\n")
-            file.write("hide everything\n")
-            file.write("show cartoon\n")
-            file.write("color gray80\n\n")
-
-            hinge_sel = "+".join(
-                str(self.actual_residue_number_map[residue_index][1]) for residue_index in hinge_residues)
-
-            file.write(f"select hinge_residues, resi {hinge_sel}\n")
-            file.write("show sticks, hinge_residues\n")
-            file.write("color yellow, hinge_residues\n")
-            file.write("set stick_radius, 0.25, hinge_residues\n\n")
-
-            file.write("set label_size, 18\n")
-            file.write("set label_font_id, 7\n")
-            file.write("label hinge_residues and name CA, resn + resi\n")
-            file.write("set label_position, [0.0, -0.3, -0.5], hinge_residues\n")
-            file.write("set label_color, white\n\n")
-
-            file.write("\nzoom hinge_residues, 10\n")
 
 
 def main():
