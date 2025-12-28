@@ -221,6 +221,7 @@ class GraphPlotter:
         if equal_axis:
             ax.axis('equal')
 
+        plt.tight_layout()
         plt.savefig(full_path, dpi=300)
         plt.close()
 
@@ -265,6 +266,7 @@ class GraphPlotter:
         if equal_axis:
             ax.axis('equal')
 
+        plt.tight_layout()
         plt.savefig(full_path, dpi=300)
         plt.close()
 
