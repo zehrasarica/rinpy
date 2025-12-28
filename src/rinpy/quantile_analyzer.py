@@ -17,7 +17,7 @@ import plotly.express as px
 import seaborn as sns
 
 from rinpy.constants import FREQUENCY_HIGH_PERCENTAGE_TEMPLATE, CHAIN_ID, RESIDUE_NUMBER, RESIDUE_NAME, PDB_ID, \
-    CENTRALITY_SCORE, INSERTION, EXCEL_EXT, CSV_EXT, HTML_EXT
+    CENTRALITY_SCORE, INSERTION, EXCEL_EXT, CSV_EXT, HTML_EXT, ATOM_NUMBER
 from rinpy.style_config import FONT_STYLES, FONT_FAMILY
 from rinpy.utils import CentralityType
 
@@ -44,7 +44,8 @@ class QuantileAnalyzer:
         for pdb_id, out_file_path in self.high_percentage_dict.items():
             file_out_df = pd.read_csv(out_file_path,
                                       sep=";",
-                                      names=[RESIDUE_NAME, CHAIN_ID, RESIDUE_NUMBER, INSERTION, CENTRALITY_SCORE])
+                                      names=[ATOM_NUMBER, CENTRALITY_SCORE, RESIDUE_NAME, CHAIN_ID, RESIDUE_NUMBER,
+                                             INSERTION])
             for _, row in file_out_df.iterrows():
                 file_row_list.append({
                     PDB_ID: pdb_id,
@@ -304,7 +305,7 @@ class QuantileAnalyzer:
         plt.tight_layout()
         plot_output_filename = os.path.join(self.destination_output_path,
                                             f"frequency_high_percentage_{self.centrality_type.display_name}_heatmap")
-        plt.savefig(plot_output_filename, dpi=300)
+        plt.savefig(plot_output_filename, dpi=300, bbox_inches="tight")
 
     @staticmethod
     def _parse_residue_string(s: str):
