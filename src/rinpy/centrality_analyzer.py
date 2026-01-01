@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     __author__ = 'Zehra Sarica'
-    __credits__ = ''
     __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
 """
 
@@ -100,12 +99,12 @@ class CentralityAnalyzer:
                                       destination_output_path=destination_output_path,
                                       actual_residue_number_map=actual_residue_number_map)
 
-    def _compute_top_percentage_quantile(self, centrality_type: CentralityType = CentralityType.DEG,
-                                         centrality_csv_file: str = CENTRALITY_CSV_TEMPLATE.format(
-                                             type=CentralityType.BET.display_name),
-                                         high_percentage_file: str = HIGH_PERCENTAGE_TEMPLATE.format(
-                                             type=CentralityType.BET.display_name),
-                                         quantile_percentage=5):
+    def _compute_high_percentage_quantile(self, centrality_type: CentralityType = CentralityType.DEG,
+                                          centrality_csv_file: str = CENTRALITY_CSV_TEMPLATE.format(
+                                              type=CentralityType.BET.display_name),
+                                          high_percentage_file: str = HIGH_PERCENTAGE_TEMPLATE.format(
+                                              type=CentralityType.BET.display_name),
+                                          quantile_percentage=5):
         """ Creates quantile files ({pdb_id}_betweenness_high_percentage_residues.csv,
         {pdb_id}_closeness_high_percentage_residues.csv, and {pdb_id}_degree_high_percentage_residues.csv)
         for the given input file ({pdb_id}_centrality_betweenness.csv or {pdb_id}_centrality_closeness.csv or
@@ -248,7 +247,7 @@ class CentralityAnalyzer:
             centrality_type can be CentralityType.CLOS or CentralityType.DEG or CentralityType.BET
         """
         quantile_setting_dict = self._generate_quantile_setting_dict()
-        self._compute_top_percentage_quantile(
+        self._compute_high_percentage_quantile(
             centrality_type=centrality_type,
             centrality_csv_file=quantile_setting_dict[centrality_type][CSV_FILE],
             high_percentage_file=quantile_setting_dict[centrality_type][OUTFILE],
@@ -267,6 +266,16 @@ class CentralityAnalyzer:
 
         return input_files
 
+    @staticmethod
+    def _get_num_workers(input_files, log_msg):
+        cpu_count = mp.cpu_count()
+        num_workers = min(cpu_count, len(input_files))
+        logging.info(f"{log_msg} | "
+                     f"CPU cores detected: {cpu_count} | "
+                     f"Input files: {len(input_files)} | "
+                     f"Workers used: {num_workers}")
+        return num_workers
+
     def calculate_quantiles(self, use_parallel: bool = False):
         """ Calculates the quantile values for the three centrality types
 
@@ -279,25 +288,25 @@ class CentralityAnalyzer:
         """
         if use_parallel:
             input_files = self._get_input_files()
-            with mp.Pool() as pool:
+            with mp.Pool(self._get_num_workers(input_files=input_files, log_msg="calculate quantiles")) as pool:
                 pool.map(self._calculate_quantile, input_files)
         else:
             if self._is_bet_checked():
-                self._compute_top_percentage_quantile(
+                self._compute_high_percentage_quantile(
                     centrality_type=CentralityType.BET,
                     centrality_csv_file=self._get_csv_file(centrality_type=CentralityType.BET),
                     high_percentage_file=self._get_outfile(centrality_type=CentralityType.BET),
                     quantile_percentage=self.calculation_options[CentralityType.BET.display_name][VALUE])
 
             if self._is_clos_checked():
-                self._compute_top_percentage_quantile(
+                self._compute_high_percentage_quantile(
                     centrality_type=CentralityType.CLOS,
                     centrality_csv_file=self._get_csv_file(centrality_type=CentralityType.CLOS),
                     high_percentage_file=self._get_outfile(centrality_type=CentralityType.CLOS),
                     quantile_percentage=self.calculation_options[CentralityType.CLOS.display_name][VALUE])
 
             if self._is_deg_checked():
-                self._compute_top_percentage_quantile(
+                self._compute_high_percentage_quantile(
                     centrality_type=CentralityType.DEG,
                     centrality_csv_file=self._get_csv_file(centrality_type=CentralityType.DEG),
                     high_percentage_file=self._get_outfile(centrality_type=CentralityType.DEG),
@@ -327,7 +336,8 @@ class CentralityAnalyzer:
         """
         if use_parallel:
             centrality_types = self._get_input_files()
-            with mp.Pool() as pool:
+            with mp.Pool(
+                    self._get_num_workers(input_files=centrality_types, log_msg="calculate centrality scores")) as pool:
                 pool.map(self._calculate_centrality_score, centrality_types)
         else:
             if self._is_bet_checked():
@@ -459,7 +469,7 @@ class CentralityAnalyzer:
             self.graph_plotter.plot_histogram(scores_dict=dict(self.graph.degree()),
                                               centrality_type_name=CentralityType.DEG.display_name)
 
-    def build_graph(self):
+    def build_network(self):
         """ Builds a graph using networkx from contact and coordinate data.
 
         This method constructs a graph where each node represents a residue in a protein structure.

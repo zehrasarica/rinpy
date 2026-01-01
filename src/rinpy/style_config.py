@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     __author__ = 'Zehra Sarica'
-    __credits__ = ''
     __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
 """
 

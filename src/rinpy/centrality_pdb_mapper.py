@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     __author__ = 'Zehra Sarica'
-    __credits__ = ''
     __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
 """
 
@@ -78,7 +77,7 @@ class CentralityPdbMapper:
 
     @log_time("Pdb Mapper Process")
     def process(self):
-        logging.info(f'Centrality Hub analyses has been started...')
+        logging.info(f'Centrality PDB Mapper has been started...')
         base_file_path = os.path.join(self.destination_output_path, self.pdb_name)
         columns = [ATOM_NUMBER, CENTRALITY_SCORE, RESIDUE_NAME, CHAIN_ID, RESIDUE_NUMBER, INSERTION]
         dtypes = {ATOM_NUMBER: int, CENTRALITY_SCORE: float, RESIDUE_NAME: str, CHAIN_ID: str, RESIDUE_NUMBER: int,

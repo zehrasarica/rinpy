@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     __author__ = 'Zehra Sarica'
-    __credits__ = ''
     __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
 """
 
@@ -18,7 +17,7 @@ from rinpy.font_utils import load_fonts_once
 from rinpy.hinge_analyzer import HingeAnalyzer
 from rinpy.log_util import *
 from rinpy.quantile_analyzer import QuantileAnalyzer
-from rinpy.residue_network_builder import ResidueGraphBuilder
+from rinpy.residue_network_builder import ResidueNetworkBuilder
 from rinpy.trajectory import Trajectory
 from rinpy.utils import *
 
@@ -120,12 +119,12 @@ class RINProcess:
 
         return output_path_pdb_ids
 
-    @log_with_stars("Residue Graph Builder")
-    @log_time("Residue Graph Builder")
-    def _process_residue_graph_builder(self, pdb_name=None, pdb_path=None, use_preprocess=True,
-                                       destination_output_path=None,
-                                       calculation_options: dict = None) -> ResidueGraphBuilder:
-        """Process Residue Graph Builder to prepare necessary input files for Residue Interaction Network."""
+    @log_with_stars("Residue Network Builder")
+    @log_time("Residue Network Builder")
+    def _process_residue_network_builder(self, pdb_name=None, pdb_path=None, use_preprocess=True,
+                                         destination_output_path=None,
+                                         calculation_options: dict = None) -> ResidueNetworkBuilder:
+        """Process Residue Network Builder to prepare necessary input files for Residue Interaction Network."""
         het_atom_list = None
 
         if self.ligand_dict is not None and pdb_name is not None and pdb_name in self.ligand_dict:
@@ -138,14 +137,14 @@ class RINProcess:
             if option.get(IS_CHECKED):
                 cutoff_value = option[VALUE]
 
-        rgb = ResidueGraphBuilder(pdb_name=pdb_name,
-                                  pdb_path=pdb_path,
-                                  use_preprocess=use_preprocess,
-                                  cutoff=cutoff_value,
-                                  destination_output_path=destination_output_path,
-                                  het_atom_list=het_atom_list,
-                                  remove_hydrogen=calculation_options[REMOVE_HYDROGEN][IS_CHECKED],
-                                  num_workers=self.num_workers)
+        rgb = ResidueNetworkBuilder(pdb_name=pdb_name,
+                                    pdb_path=pdb_path,
+                                    use_preprocess=use_preprocess,
+                                    cutoff=cutoff_value,
+                                    destination_output_path=destination_output_path,
+                                    het_atom_list=het_atom_list,
+                                    remove_hydrogen=calculation_options[REMOVE_HYDROGEN][IS_CHECKED],
+                                    num_workers=self.num_workers)
 
         rgb.calculate_contact()
 
@@ -164,7 +163,7 @@ class RINProcess:
                                 destination_output_path=destination_output_path,
                                 calculation_options=calculation_options,
                                 actual_residue_number_map=actual_residue_number_map)
-        ca.build_graph()
+        ca.build_network()
         ca.calculate_all_scores(use_parallel=True)
         return ca
 
@@ -286,20 +285,20 @@ class RINProcess:
                 log_util.log_star_message(pdb_name.upper())
                 logging.info(f'Start time: {start_time.time()}')
 
-                residue_graph_builder = self._process_residue_graph_builder(pdb_name=pdb_name,
-                                                                            pdb_path=pdb_file_path,
-                                                                            use_preprocess=True,
-                                                                            destination_output_path=output_path,
-                                                                            calculation_options=self.calculation_options)
+                residue_network_builder = self._process_residue_network_builder(pdb_name=pdb_name,
+                                                                                pdb_path=pdb_file_path,
+                                                                                use_preprocess=True,
+                                                                                destination_output_path=output_path,
+                                                                                calculation_options=self.calculation_options)
 
-                number_of_amino_acid = residue_graph_builder.get_number_of_amino_acid()
+                number_of_amino_acid = residue_network_builder.get_number_of_amino_acid()
                 total_amino_acids_map[pdb_name] = number_of_amino_acid
 
                 ca = self._process_centrality_analyzer(pdb_name=pdb_name,
                                                        number_of_amino_acid=number_of_amino_acid,
                                                        destination_output_path=output_path,
                                                        calculation_options=self.calculation_options,
-                                                       actual_residue_number_map=residue_graph_builder.get_actual_residue_number_map())
+                                                       actual_residue_number_map=residue_network_builder.get_actual_residue_number_map())
 
                 bet_high_percentage_filename = f'{pdb_name}_{HIGH_PERCENTAGE_TEMPLATE.format(type=CentralityType.BET.display_name)}'
                 clos_high_percentage_filename = f'{pdb_name}_{HIGH_PERCENTAGE_TEMPLATE.format(type=CentralityType.CLOS.display_name)}'
@@ -319,7 +318,7 @@ class RINProcess:
                 hc = self._process_hinge_analyzer(graph=ca.graph,
                                                   pdb_name=pdb_name,
                                                   destination_output_path=output_path,
-                                                  actual_residue_number_map=residue_graph_builder.get_actual_residue_number_map(),
+                                                  actual_residue_number_map=residue_network_builder.get_actual_residue_number_map(),
                                                   calculation_options=self.calculation_options)
 
                 end_time = datetime.strptime(datetime.now().strftime("%H:%M:%S"), "%H:%M:%S")

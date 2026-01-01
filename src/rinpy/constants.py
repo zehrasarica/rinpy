@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     __author__ = 'Zehra Sarica'
-    __credits__ = ''
     __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
 """
 
@@ -14,7 +13,7 @@ CENTRALITY_PDB_TEMPLATE: str = "centrality_{type}.pdb"
 HIGH_PERCENTAGE_TEMPLATE: str = "{type}_high_percentage_residues.csv"
 FREQUENCY_HIGH_PERCENTAGE_TEMPLATE: str = "frequency_{type}_high_percentage"
 
-TOP_PERCENTAGE_TILE: str = "top_percentage_quantile"
+TOP_PERCENTAGE_TILE: str = "high_percentage_quantile"
 SOURCE_RESIDUE: str = 'source_residue'
 TARGET_RESIDUE: str = 'target_residue'
 GRAPH_NAME: str = "rinpy"

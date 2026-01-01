@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     __author__ = 'Zehra Sarica'
-    __credits__ = ''
     __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
 """
 
@@ -26,8 +25,8 @@ TARGET = 'target'
 AFFINITY = 'affinity'
 
 
-class ResidueGraphBuilder:
-    """ The Residue Graph Builder module generates output data for constructing residue interaction networks based on
+class ResidueNetworkBuilder:
+    """ The Residue Network Builder module generates output data for constructing residue interaction networks based on
         affinity calculations between α-carbon atoms. It computes atom-to-atom distances between source and target
         residues to identify potential interactions.
 

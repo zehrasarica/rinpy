@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+    __author__ = 'Zehra Sarica'
+    __email__ = ['sarica16@itu.edu.tr','zehraacar559@gmail.com']
+"""
+
 # Admissible pre-release markers:
 #   X.YaN   # Alpha release
 #   X.YbN   # Beta release
@@ -8,7 +14,7 @@
 # 'X.Y.dev0' is the canonical version of 'X.Y.dev'
 #
 
-__version__ = "0.0.1dev"
+__version__ = "0.1.0"
 __author__ = "Zehra Sarica <zehraacar559@gmail.com, sarica16@itu.edu.tr>"
 
 import rinpy.logging_config
