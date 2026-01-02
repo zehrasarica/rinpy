@@ -15,14 +15,15 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-    { name = "Zehra Sarica", email = "sarica16@itu.edu.tr" },
-    { name = "Zehra Sarica", email = "zehraacar559@gmail.com" }
+    { name = "Zehra Sarica", email = "zehraacar559@gmail.com" },
+    { name = "Zehra Sarica", email = "sarica16@itu.edu.tr" }
 ]
 requires-python = ">=3.10"
 
 dependencies = [
     "setuptools",
-    "matplotlib==3.7.2",
+    "matplotlib==3.7.2; python_version < '3.12'",
+    "matplotlib>=3.8,<3.9; python_version >= '3.12'",
     "networkx==3.4.2",
     "pandas==2.0.3",
     "biopandas==0.5.1",
