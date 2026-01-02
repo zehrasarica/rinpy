@@ -32,7 +32,7 @@ with attributes such as Chain ID, Residue Number, Insertion Code, and its Cartes
 - Cross-platform: compatible with Windows, macOS, and Linux.
 - Can be integrated with molecular visualization system such as PyMOL.
 - Centrality analysis (betweenness, closeness, and degree) to identify key residues.
-- Detects the resides with high centrality scores using a user-defined quantile percentage.
+- Detects the residues with high centrality scores using a user-defined quantile percentage.
 - Frequency of common hub residues across PDB datasets.
 - Graph spectral analysis to identify hinge residues and dynamically connected domains.
 - Interactive 2D heatmap visualizations for each centrality metrics, residue frequencies, spectral domains and more.
