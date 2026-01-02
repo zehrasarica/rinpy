@@ -14,7 +14,7 @@
 # 'X.Y.dev0' is the canonical version of 'X.Y.dev'
 #
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Zehra Sarica <zehraacar559@gmail.com, sarica16@itu.edu.tr>"
 
 import rinpy.logging_config
