@@ -27,7 +27,7 @@ The **RinPy** is designed for constructing, visualizing, and analyzing Residue I
 
 🖥️ RinPy GUI
 --------------
-You can download the standalone graphical user interface (GUI) version of **RinPy** from [here](https://drive.google.com/drive/folders/1GlLva31y7Ebpmpd8Dk6uQmGHCem2vWfO?usp=drive_link).
+You can download the standalone graphical user interface (GUI) version of **RinPy** from <a href="https://drive.google.com/drive/folders/1GlLva31y7Ebpmpd8Dk6uQmGHCem2vWfO?usp=drive_link" target="_blank" rel="noopener noreferrer">here</a>.
 
 ⚙️ Installation
 -----------------
@@ -50,7 +50,7 @@ To ensure reliable management of the Python environment and scientific dependenc
 
 ### 🚀 Installation via PyPI (Recommended)
 
-RinPy is available on **PyPI** ([https://pypi.org/project/rinpy/](https://pypi.org/project/rinpy/)) and can be installed directly using **pip**.
+RinPy is available on **PyPI** (<a href="https://pypi.org/project/rinpy/" target="_blank" rel="noopener noreferrer">RinPy</a>) and can be installed directly using **pip**.
 
 The following steps demonstrate how to create and activate a conda virtual environment, install RinPy, verify the installation, and run the program from the command line:
 
@@ -73,9 +73,9 @@ rinpy rinpy --input_path INPUT_PATH --output_path OUTPUT_PATH --calculation_opti
 
 #### Parameters from the terminal
 
-- `--input_path`: Input PDB file
+- `--input_path`: Input directory including PDB files
 - `--output_path`: Output directory
-- `--calculation_option_file`: JSON file containing parameters. To download,  [calculation_options.json](https://github.com/zehrasarica/rinpy/tree/main/src/rinpy/calculation_options.json)
+- `--calculation_option_file`: JSON file containing parameters. To download, click <a href="https://github.com/zehrasarica/rinpy/tree/main/src/rinpy/calculation_options.json" target="_blank" rel="noopener noreferrer">calculation_options.json</a>
 
 ### 🔧 Installation from Source (Alternative)
 
@@ -97,7 +97,7 @@ If you prefer to install RinPy from source, follow the steps below:
 
 🚀 Usage
 ---------
-RinPy can be used programmatically via the `RINProcess` API within your Python scripts.
+RinPy can be used programmatically via the `RINProcess` API within your Python scripts. Create a Python file named `main.py`, insert the content given below, and execute the script via the terminal or an equivalent environment.
 
 ### Basic Example
 
@@ -174,12 +174,8 @@ pdb_ids → trajectory_file.
 - **trajectory_file**: The MD trajectory file (pdb format) which contains multiple snaphots from MD.
 - **stride**: Default is **1**. This parameter is used in conjunction with trajectory_file parameter.
 
-🤝 Contributing
------------------
-Contributions, bug reports, and feature requests are welcome! Please follow
-standard GitHub workflow: fork → branch → pull request.
 
-🪪 License
+📄 License
 ------------
 MIT License. See LICENSE file for details.
 
