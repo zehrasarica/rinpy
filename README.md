@@ -177,7 +177,7 @@ pdb_ids → trajectory_file.
 
 📄 License
 ------------
-MIT License. See LICENSE file for details.
+MIT License. See [LICENSE](LICENSE) file for details.
 
 📘How to Cite
 ---------------
