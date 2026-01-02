@@ -27,7 +27,7 @@ The **RinPy** is designed for constructing, visualizing, and analyzing Residue I
 
 🖥️ RinPy GUI
 --------------
-You can download the standalone graphical user interface (GUI) version of **RinPy** from <a href="https://drive.google.com/drive/folders/1GlLva31y7Ebpmpd8Dk6uQmGHCem2vWfO?usp=drive_link" target="_blank" rel="noopener noreferrer">here</a>.
+You can download the standalone graphical user interface (GUI) version of **RinPy** from [here](https://drive.google.com/drive/folders/1GlLva31y7Ebpmpd8Dk6uQmGHCem2vWfO?usp=drive_link).
 
 ⚙️ Installation
 -----------------
@@ -50,7 +50,7 @@ To ensure reliable management of the Python environment and scientific dependenc
 
 ### 🚀 Installation via PyPI (Recommended)
 
-RinPy is available on **PyPI** (<a href="https://pypi.org/project/rinpy/" target="_blank" rel="noopener noreferrer">RinPy</a>) and can be installed directly using **pip**.
+RinPy is available on **PyPI** ([RinPy](https://pypi.org/project/rinpy/)) and can be installed directly using **pip**.
 
 The following steps demonstrate how to create and activate a conda virtual environment, install RinPy, verify the installation, and run the program from the command line:
 
@@ -75,7 +75,7 @@ rinpy rinpy --input_path INPUT_PATH --output_path OUTPUT_PATH --calculation_opti
 
 - `--input_path`: Input directory including PDB files
 - `--output_path`: Output directory
-- `--calculation_option_file`: JSON file containing parameters. To download, click <a href="https://github.com/zehrasarica/rinpy/tree/main/src/rinpy/calculation_options.json" target="_blank" rel="noopener noreferrer">calculation_options.json</a>
+- `--calculation_option_file`: JSON file containing parameters. To download, click [calculation_options.json](https://github.com/zehrasarica/rinpy/tree/main/src/rinpy/calculation_options.json).
 
 ### 🔧 Installation from Source (Alternative)
 

@@ -28,7 +28,7 @@ class CentralityPdbMapper:
     Attributes
     ----------
     pdb_name : str, default: None
-        PDB ID which must be same with file name, such as 3t0t (3t0t.pdb).
+        PDB ID which must be same with file name, such as 4OBE (4OBE.pdb).
     destination_output_path : str, default: output, this path must be provided.
         Location of the output results in which all files for each PDB file process are stored in this path.
     calculation_options: dict, default: None

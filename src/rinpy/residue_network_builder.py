@@ -33,15 +33,15 @@ class ResidueNetworkBuilder:
         Attributes
         ----------
         pdb_name : str, default: None
-            PDB ID which must be same with file name, such as 3t0t (3t0t.pdb).
+            PDB ID which must be same with file name, such as 4OBE (4OBE.pdb).
 
         pdb_path : str, default: None
-            Location of the PDB file that will be used for contact calculation (path/to/3t0t.pdb).
+            Location of the PDB file that will be used for contact calculation (path/to/4OBE.pdb).
 
         use_preprocess : bool, default: False
             Whether to preprocess the PDB before analysis. The given PDB file contains additional information
             such as {'ATOM', 'HETATM', 'ANISOU', 'OTHERS'}.If this is True, then only ATOM records from
-            the PDB file will be extracted as preprocess and will be saved as 3t0t_pre.pdb in the given output of 3t0t.
+            the PDB file will be extracted as preprocess and will be saved as 4OBE_pre.pdb in the given output of 4OBE.
 
         cutoff : float, default: 4.5 Armstrong (Å)
             The distance between atoms will be considered if it is equal or less than the given cutoff.

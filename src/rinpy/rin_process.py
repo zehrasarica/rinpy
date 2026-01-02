@@ -109,7 +109,7 @@ class RINProcess:
                     logging.warning(f"{pdb_id} has already fetched to {pdb_id_file}.")
                     output_path_pdb_ids.append(pdb_id_file)
             else:
-                logging.error(f"{pdb_id} is NOT VALID PDB ID. It must be 4 character like 3t05!")
+                logging.error(f"{pdb_id} is NOT VALID PDB ID. It must be 4 character like 4OBE!")
         if fetched_pdb_files:
             logging.info(
                 f"PDB IDS: {fetched_pdb_files} have been fetched from the protein data bank and saved to the path: {output_path}")

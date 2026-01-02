@@ -36,7 +36,7 @@ class CentralityAnalyzer:
         Attributes
         ----------
         pdb_name : str, default: None
-            PDB ID which must be same with file name, such as 3t0t (3t0t.pdb).
+            PDB ID which must be same with file name, such as 4OBE (4OBE.pdb).
 
         number_of_amino_acid : int, default: None
             The number of residue in the given PDB file.
