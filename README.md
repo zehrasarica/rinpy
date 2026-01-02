@@ -193,9 +193,9 @@ pdb_ids → trajectory_file.
 
 ## 📊 Case Study of RinPy
 
-After setting up a Conda virtual environment and installing **RinPy**, navigate to the `tests` folder. It contains two
+After setting up a Conda virtual environment and installing **RinPy**, navigate to the **`tests`** folder. It contains two
 Python scripts and their corresponding `.sh` files for running the analyses.
-The `kras_sos1_input` folder contains KRAS–SOS1 PDB files, whereas `kras_input` includes KRAS PDB structures used in the
+The **`kras_sos1_input`** folder contains KRAS–SOS1 PDB files, whereas **`kras_input`** includes KRAS PDB structures used in the
 case study.
 
 To analyze the MD trajectory PDB files, download the dataset from [here](https://drive.google.com/file/d/1COAZqgiCGVhkYvCI6DQLv2YzJ5emcvRN/view?usp=drive_link).
