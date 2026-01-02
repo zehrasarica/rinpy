@@ -15,7 +15,12 @@
 
 📖 Description
 ------------
-The **RinPy** is designed for constructing, visualizing, and analyzing Residue Interaction Networks (RINs). RIN describes a protein as a network of nodes interconnected by weighted edges. In this network, each node represents a residue, nucleotide or a ligand at the average coordinate of its atomic coordinates. The edge weight between two nodes is defined by the local interaction strength between the two residues. The average coordinates of the residues and/or nucleotides are placed at the Cα atom or P atom, respectively, for the protein-RNA/DNA complexes. Each node is annotated with attributes such as Chain ID, Residue Number, Insertion Code, and its Cartesian coordinates.
+The **RinPy** is designed for constructing, visualizing, and analyzing Residue Interaction Networks (RINs). RIN
+describes a protein as a network of nodes interconnected by weighted edges. In this network, each node represents a
+residue, nucleotide or a ligand at the average coordinate of its atomic coordinates. The edge weight between two nodes
+is defined by the local interaction strength between the two residues. The average coordinates of the residues and/or
+nucleotides are placed at the Cα atom or P atom, respectively, for the protein-RNA/DNA complexes. Each node is annotated
+with attributes such as Chain ID, Residue Number, Insertion Code, and its Cartesian coordinates.
 
 ✨ Features
 -------------
@@ -27,7 +32,8 @@ The **RinPy** is designed for constructing, visualizing, and analyzing Residue I
 
 🖥️ RinPy GUI
 --------------
-You can download the standalone graphical user interface (GUI) version of **RinPy** from [here](https://drive.google.com/drive/folders/1GlLva31y7Ebpmpd8Dk6uQmGHCem2vWfO?usp=drive_link).
+You can download the standalone graphical user interface (GUI) version of **RinPy**
+from [here](https://drive.google.com/drive/folders/1GlLva31y7Ebpmpd8Dk6uQmGHCem2vWfO?usp=drive_link).
 
 ⚙️ Installation
 -----------------
@@ -52,7 +58,8 @@ To ensure reliable management of the Python environment and scientific dependenc
 
 RinPy is available on **PyPI** ([RinPy](https://pypi.org/project/rinpy/)) and can be installed directly using **pip**.
 
-The following steps demonstrate how to create and activate a conda virtual environment, install RinPy, verify the installation, and run the program from the command line:
+The following steps demonstrate how to create and activate a conda virtual environment, install RinPy, verify the
+installation, and run the program from the command line:
 
 ```bash
 # Create a conda virtual environment
@@ -75,7 +82,8 @@ rinpy rinpy --input_path INPUT_PATH --output_path OUTPUT_PATH --calculation_opti
 
 - `--input_path`: Input directory including PDB files
 - `--output_path`: Output directory
-- `--calculation_option_file`: JSON file containing parameters. To download, click [calculation_options.json](https://github.com/zehrasarica/rinpy/tree/main/src/rinpy/calculation_options.json).
+- `--calculation_option_file`: JSON file containing parameters. To download,
+  click [calculation_options.json](https://github.com/zehrasarica/rinpy/tree/main/src/rinpy/calculation_options.json).
 
 ### 🔧 Installation from Source (Alternative)
 
@@ -97,7 +105,8 @@ If you prefer to install RinPy from source, follow the steps below:
 
 🚀 Usage
 ---------
-RinPy can be used programmatically via the `RINProcess` API within your Python scripts. Create a Python file named `main.py`, insert the content given below, and execute the script via the terminal or an equivalent environment.
+RinPy can be used programmatically via the `RINProcess` API within your Python scripts. Create a Python file
+named `main.py`, insert the content given below, and execute the script via the terminal or an equivalent environment.
 
 ### Basic Example
 
@@ -162,7 +171,8 @@ rin.start_process()
 
 📝 Notes
 ----------
-**RinPy** requires output_path and only one of the following: input_path, pdb_ids, or trajectory_file. Providing multiple
+**RinPy** requires output_path and only one of the following: input_path, pdb_ids, or trajectory_file. Providing
+multiple
 inputs is not allowed; if more than one is given, input_path will take precedence. Input processing order: input_path →
 pdb_ids → trajectory_file.
 
@@ -174,6 +184,12 @@ pdb_ids → trajectory_file.
 - **trajectory_file**: The MD trajectory file (pdb format) which contains multiple snaphots from MD.
 - **stride**: Default is **1**. This parameter is used in conjunction with trajectory_file parameter.
 
+## 📊 Case Study of RinPy
+
+After setting up a Conda virtual environment and installing **RinPy**, navigate to the `tests` folder. It contains two
+Python scripts and their corresponding `.sh` files for running the analyses.
+The `kras_sos1_input` folder contains KRAS–SOS1 PDB files, whereas `kras_input` includes KRAS PDB structures used in the
+case study.
 
 📄 License
 ------------
