@@ -191,6 +191,9 @@ Python scripts and their corresponding `.sh` files for running the analyses.
 The `kras_sos1_input` folder contains KRAS–SOS1 PDB files, whereas `kras_input` includes KRAS PDB structures used in the
 case study.
 
+To analyze the MD trajectory PDB files, download the dataset from [here](https://drive.google.com/drive/folders/1eGQoAAVuBGXfVZGrVnxGrVTY3A3n9YGg?usp=drive_link).
+You may update the existing a Python script and its corresponding `.sh` file under `tests` directory.
+
 📄 License
 ------------
 MIT License. See [LICENSE](LICENSE) file for details.
